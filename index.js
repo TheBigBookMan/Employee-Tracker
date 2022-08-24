@@ -19,10 +19,10 @@ const openingPrompt = () => {
         choices: ["View All Departments", "View All Roles", "View All Employees", "Add A Department", "Add A Role", "Add An Employee", "Update An Employee Role", "Quit"]
     }]).then(response => {
         if(response.selectionPrompt === "Quit") {
-            console.log("Thank you for using the Employee Tracker, goodbye.")
+            console.log("Thank you for using the Employee Tracker, goodbye.");
             return;
         } else {
-            promptChecker(response.selectionPrompt)
+            promptChecker(response.selectionPrompt);
         }
     })
 };
@@ -31,25 +31,18 @@ const openingPrompt = () => {
 const promptChecker = selection => {
     if(selection === "View All Departments") {
         viewAllDepartments();
-        openingPrompt();
     } else if(selection === "View All Roles") {
         viewAllRoles();
-        openingPrompt();
     } else if(selection === "View All Employees") {
         viewAllEmployees();
-        openingPrompt();
     } else if(selection === "Add A Department") {
         addDepartment();
-        openingPrompt();
     } else if(selection === "Add A Role") {
         addRole();
-        openingPrompt();
     } else if(selection === "Add An Employee") {
         addEmployee();
-        openingPrompt();
     } else if(selection === "Update An Employee Role") {
         updateEmployeeRole();
-        openingPrompt();
     }
 };
 
@@ -58,6 +51,10 @@ const promptChecker = selection => {
 
 const viewAllDepartments = () => {
     console.log("View all departmentssss")
+    // add in GET fetch
+
+
+    // openingPrompt();
 }
 
 // WHEN I choose to view all roles
@@ -65,6 +62,9 @@ const viewAllDepartments = () => {
 
 const viewAllRoles = () => {
     console.log("View all rolessss")
+     // add in GET fetch
+    
+    // openingPrompt();
 }
 
 // WHEN I choose to view all employees
@@ -72,20 +72,54 @@ const viewAllRoles = () => {
 
 const viewAllEmployees = () => {
     console.log("View all Employeeeeees")
+     // add in GET fetch
+    
+    // openingPrompt();
 }
 
 // WHEN I choose to add a department
 // THEN I am prompted to enter the name of the department and that department is added to the database
+// MAYBE PUT IN A ERROR RESPONSE FOR IF IT IS SOMETHING RANDOM
 
 const addDepartment = () => {
-    console.log("add a department")
+    return inquirer.prompt([{
+        type: "input",
+        message: "What is the name of the department you would like to add?",
+        name: "newDepartment"
+    }]).then(response => {
+        const newDepartment = response.newDepartment;
+        console.log(`The new department of ${newDepartment} has been added to the database.`)
+        // add in fetch for POST API
+
+        // openingPrompt();
+    })
 }
 
 // WHEN I choose to add a role
 // THEN I am prompted to enter the name, salary, and department for the role and that role is added to the database
 
 const addRole = () => {
-    console.log("add roleeee")
+    return inquirer.prompt([{
+        type: "input",
+        message: "What is the name of the new role?",
+        name: "newRoleName"
+    }, {
+        type: "number",
+        message: "What is the salary of the new role?",
+        name: "newRoleSalary"
+    }, {
+        type: "list",
+        message: "Which department does the new role belong to?",
+        choices: ["Engineering", "Finance", "Legal", "Sales", "Service"],
+        name: "newRoleDepartment"
+    }]).then(response => {
+        const {newRoleName, newRoleSalary, newRoleDepartment} = response;
+        // MAYBE TURN THIS INTO A CLASS FOR ROLES!?!?!
+
+        console.log(`The new role ${newRoleName} with the salary of $${newRoleSalary} within the department ${newRoleDepartment} has been added to the database.`);
+    })
+
+    // openingPrompt();
 }
 
 // WHEN I choose to add an employee
@@ -93,6 +127,34 @@ const addRole = () => {
 
 const addEmployee = () => {
     console.log("Add employeeee")
+    return inquirer.prompt([{
+        type: "input",
+        message: "What is the new employees first name?",
+        name: "newEmployeeFirstName"
+    }, {
+        type: "input",
+        message: "What is the new employees last name?",
+        name: "newEmployeeLastName"
+    }, {
+        type: "list",
+        message: "What is the new employees role?",
+        choices: ["Sales Lead", "Sales Person", "Customer Service", "Lead Engineer", "Software Engineer", "Account Manager", "Accountant", "Legal Team Lead", "Lawyer"],
+        name: "newEmployeeRole"
+    }, {
+        type: "list",
+        message: "Who is the new employees manager?",
+        //NEED TO IMPORT THE CHOICES FROM DB
+        choices: ["IMPORT FROM DB"],
+        name: "newEmployeeManager"
+    }]).then(response => {
+        const {newEmployeeFirstName, newEmployeeLastName, newEmployeeRole, newEmployeeManager} = response;
+        // THIS WILL PROBABLY NEED TO BE CREATED INTO A CLASS
+
+        console.log(`New Employee: ${newEmployeeFirstName} ${newEmployeeLastName} with the role of ${newEmployeeRole} and manager ${newEmployeeManager} has been added to the database.`)
+    })
+    
+
+    // openingPrompt();
 }
 
 // WHEN I choose to update an employee role
@@ -100,6 +162,8 @@ const addEmployee = () => {
 
 const updateEmployeeRole = () => {
     console.log("update employee role")
+
+    // openingPrompt();
 }
 
 
