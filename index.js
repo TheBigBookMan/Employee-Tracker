@@ -8,7 +8,6 @@ const inquirer = require('inquirer');
 
 // MAyBE NEED TO IMPORT THE API FILE TO HERE TO CONNECT THE FETCH WITH THE API RECIEVE WITH EXPRESS????? DOUBLE CHECK ALLL THAT
 
-// WRITE UP THE INQUIRE PROMPTS AND MAKE IT SO THAT IF THEY WANT TO QUIT IT CANCELS OR IF THEY WANT TO SELECT THE PROMPTS THEN IT GOES TO THOSE OTHER PROMPTS
 
 // User is prompted with what they want to select
 const openingPrompt = () => {
@@ -115,6 +114,7 @@ const addRole = () => {
     }]).then(response => {
         const {newRoleName, newRoleSalary, newRoleDepartment} = response;
         // MAYBE TURN THIS INTO A CLASS FOR ROLES!?!?!
+        // add in fetch for POST API
 
         console.log(`The new role ${newRoleName} with the salary of $${newRoleSalary} within the department ${newRoleDepartment} has been added to the database.`);
     })
@@ -126,7 +126,6 @@ const addRole = () => {
 // THEN I am prompted to enter the employee’s first name, last name, role, and manager, and that employee is added to the database
 
 const addEmployee = () => {
-    console.log("Add employeeee")
     return inquirer.prompt([{
         type: "input",
         message: "What is the new employees first name?",
@@ -149,6 +148,7 @@ const addEmployee = () => {
     }]).then(response => {
         const {newEmployeeFirstName, newEmployeeLastName, newEmployeeRole, newEmployeeManager} = response;
         // THIS WILL PROBABLY NEED TO BE CREATED INTO A CLASS
+        // add in fetch for POST API
 
         console.log(`New Employee: ${newEmployeeFirstName} ${newEmployeeLastName} with the role of ${newEmployeeRole} and manager ${newEmployeeManager} has been added to the database.`)
     })
@@ -162,7 +162,22 @@ const addEmployee = () => {
 
 const updateEmployeeRole = () => {
     console.log("update employee role")
+    inquirer.prompt([{
+        type: "list",
+        message: "Which employee do you want to update?",
+        choices: ["NEED TO ADD FROM DATABASE I THINK"],
+        name: "updateEmployeeName"
+    }, {
+        type: "list",
+        message: "Which role do you want to assign to the updated employee?",
+        choices: ["Sales Lead", "Sales Person", "Customer Service", "Lead Engineer", "Software Engineer", "Account Manager", "Accountant", "Legal Team Lead", "Lawyer"],
+        name: "updatedEmployeeRole"
+    }]).then(response => {
+        const {updateEmployeeName, updatedEmployeeRole} = response;
+        console.log(`The employee ${updateEmployeeName} updated role to ${updatedEmployeeRole} has been updated in the database.`)
 
+        // add in fetch for PUT API
+    })
     // openingPrompt();
 }
 
