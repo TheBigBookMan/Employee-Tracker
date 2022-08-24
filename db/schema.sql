@@ -5,12 +5,12 @@ USE employee_tracker;
 
 
 CREATE TABLE department (
-    id INT PRIMARY KEY NOT NULL,
+    id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
     name VARCHAR(30) NOT NULL
 );
 
 CREATE TABLE role (
-    id INT PRIMARY KEY NOT NULL,
+    id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
     title VARCHAR(30) NOT NULL,
     salary DECIMAL NOT NULL,
     department_id INT,
