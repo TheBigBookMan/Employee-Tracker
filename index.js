@@ -1,5 +1,6 @@
 // IMPORT INQUIRE PACKAGE
 const inquirer = require('inquirer');
+const host = "http://localhost:3001"
 
 // IMPORT THE SQL2 PACKAGE???? MAYBE JUST FOR INDEX PAGE
 // IMPORT THE CONSOLE TABLE PACKAGE TO SHOW THE TABLES OF DATA NEATLY IN THE CONSOLE
@@ -48,21 +49,32 @@ const promptChecker = selection => {
 //WHEN I choose to view all departments
 //THEN I am presented with a formatted table showing department names and department ids
 
-const viewAllDepartments = () => {
-    console.log("View all departmentssss")
+const viewAllDepartments = async () => {
     // add in GET fetch
-    
-
-    // openingPrompt();
+    try {
+        const result = await fetch(`${host}/api/department`, {
+        method: 'GET',
+    });
+        const json = await result.json();
+        console.log(json)
+        return json;
+    } catch(err) {
+        console.log(err)
+    }
 }
-
-// WHEN I choose to view all roles
 // THEN I am presented with the job title, role id, the department that role belongs to, and the salary for that role
 
-const viewAllRoles = () => {
-    console.log("View all rolessss")
-     // add in GET fetch
-    
+const viewAllRoles = async () => {
+    try {
+        const result = await fetch(`${host}/api/roles`, {
+            method: 'GET',
+    });
+        const json = await result.json();
+        console.log(json)
+        return json;
+    } catch(err) {
+        console.log(err)
+    }
     // openingPrompt();
 }
 
