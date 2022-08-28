@@ -51,7 +51,7 @@ const promptChecker = selection => {
 const viewAllDepartments = () => {
     console.log("View all departmentssss")
     // add in GET fetch
-
+    
 
     // openingPrompt();
 }
