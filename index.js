@@ -74,7 +74,7 @@ const viewAllRoles = async () => {
         return json;
     } catch(err) {
         console.log(err)
-    }
+    };
     // openingPrompt();
 }
 
@@ -82,7 +82,6 @@ const viewAllRoles = async () => {
 // THEN I am presented with a formatted table showing employee data, including employee ids, first names, last names, job titles, departments, salaries, and managers that the employees report to
 
 const viewAllEmployees = async () => {
-    console.log("View all Employeeeeees")
     try{
         const result = await fetch(`${host}/api/employees`, {
             method: 'GET',
@@ -100,18 +99,25 @@ const viewAllEmployees = async () => {
 // THEN I am prompted to enter the name of the department and that department is added to the database
 // MAYBE PUT IN A ERROR RESPONSE FOR IF IT IS SOMETHING RANDOM
 
-const addDepartment = () => {
-    return inquirer.prompt([{
+const addDepartment = async () => {
+    const inq = await inquirer.prompt([{
         type: "input",
         message: "What is the name of the department you would like to add?",
         name: "newDepartment"
-    }]).then(response => {
-        const newDepartment = response.newDepartment;
+    }])
+        const newDepartment = await inq;
         console.log(`The new department of ${newDepartment} has been added to the database.`)
-        // add in fetch for POST API
-
+        const result = await fetch(`${host}/api/departments`, {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json',
+            },
+            body: JSON.stringify(newDepartment),
+        })
+        const json = await result.json()
+        console.log(json)
+        return json;
         // openingPrompt();
-    })
 }
 
 // WHEN I choose to add a role

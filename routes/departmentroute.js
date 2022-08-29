@@ -21,5 +21,22 @@ router.get('/', (req, res) => {
     })
 })
 
+router.post('/', (req, res) => {
+    const {newDepartment} = req.body
+    const sql = `INSERT INTO departments(name)
+    VALUES (?);`
+    db.query(sql, newDepartment, (err, result) => {
+        if(err) {
+            res.status(400).json({error: err.message});
+            return;
+        } else {
+            res.json({
+                message: 'success',
+                data: newDepartment
+            })
+        }
+    })
+    
+})
 
 module.exports = router;
