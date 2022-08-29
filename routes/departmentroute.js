@@ -12,7 +12,7 @@ const db = mysql.createConnection({
 );
 
 router.get('/', (req, res) => {
-    const sql = `SELECT * FROM department`
+    const sql = `SELECT * FROM departments`
     db.query(sql, (err, rows) => {
         res.json({
             message: 'success',

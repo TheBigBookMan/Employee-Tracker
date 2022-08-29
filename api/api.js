@@ -10,12 +10,10 @@ const PORT = process.env.PORT || 3001;
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
-// CREATE CONNEcTION FOR SQL
 
-
-app.use('/api/department', departmentRouter)
-app.use('/employee', employeeRouter)
-app.use('/roles', rolesRouter)
+app.use('/api/departments', departmentRouter)
+app.use('/api/employees', employeeRouter)
+app.use('/api/roles', rolesRouter)
 
 // MAKE THE PATHS FOR THE REQUIRED ONES AND THEN MAYBE HAVE TO USE A ROUTER IF NEED BE
 app.get('/', (req, res) => {

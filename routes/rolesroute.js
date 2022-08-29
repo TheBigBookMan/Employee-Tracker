@@ -12,7 +12,11 @@ const db = mysql.createConnection({
 );
 
 router.get('/', (req, res) => {
-    const sql = `SELECT * FROM role`;
+    const sql = `SELECT roles.id, roles.title, departments.name, roles.salary 
+    FROM roles 
+    LEFT JOIN departments 
+    ON roles.department_id = departments.id 
+    ORDER BY id ASC`;
     db.query(sql, (err, rows) => {
         res.json({
             message: 'success',

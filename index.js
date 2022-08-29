@@ -52,7 +52,7 @@ const promptChecker = selection => {
 const viewAllDepartments = async () => {
     // add in GET fetch
     try {
-        const result = await fetch(`${host}/api/department`, {
+        const result = await fetch(`${host}/api/departments`, {
         method: 'GET',
     });
         const json = await result.json();
@@ -81,10 +81,18 @@ const viewAllRoles = async () => {
 // WHEN I choose to view all employees
 // THEN I am presented with a formatted table showing employee data, including employee ids, first names, last names, job titles, departments, salaries, and managers that the employees report to
 
-const viewAllEmployees = () => {
+const viewAllEmployees = async () => {
     console.log("View all Employeeeeees")
-     // add in GET fetch
-    
+    try{
+        const result = await fetch(`${host}/api/employees`, {
+            method: 'GET',
+        });
+        const json = await result.json();
+        console.log(json)
+        return json;
+    } catch(err) {
+        console.log(err)
+    }
     // openingPrompt();
 }
 
