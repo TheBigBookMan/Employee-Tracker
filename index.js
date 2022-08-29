@@ -100,51 +100,66 @@ const viewAllEmployees = async () => {
 // MAYBE PUT IN A ERROR RESPONSE FOR IF IT IS SOMETHING RANDOM
 
 const addDepartment = async () => {
-    const inq = await inquirer.prompt([{
-        type: "input",
-        message: "What is the name of the department you would like to add?",
-        name: "newDepartment"
-    }])
-        const newDepartment = await inq;
-        console.log(`The new department of ${newDepartment} has been added to the database.`)
-        const result = await fetch(`${host}/api/departments`, {
-            method: 'POST',
-            headers: {
-                'Content-type': 'application/json',
-            },
-            body: JSON.stringify(newDepartment),
-        })
-        const json = await result.json()
-        console.log(json)
-        return json;
+    try {
+        const inq = await inquirer.prompt([{
+            type: "input",
+            message: "What is the name of the department you would like to add?",
+            name: "newDepartment"
+        }])
+            const newDepartment = await inq;
+            console.log(`The new department of ${newDepartment} has been added to the database.`)
+            const result = await fetch(`${host}/api/departments`, {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json',
+                },
+                body: JSON.stringify(newDepartment),
+            })
+            const json = await result.json()
+            console.log(json)
+            return json;
+    } catch(err) {
+        console.log(err)
+    }
+    
         // openingPrompt();
 }
 
 // WHEN I choose to add a role
 // THEN I am prompted to enter the name, salary, and department for the role and that role is added to the database
 
-const addRole = () => {
-    return inquirer.prompt([{
-        type: "input",
-        message: "What is the name of the new role?",
-        name: "newRoleName"
-    }, {
-        type: "number",
-        message: "What is the salary of the new role?",
-        name: "newRoleSalary"
-    }, {
-        type: "list",
-        message: "Which department does the new role belong to?",
-        choices: ["Engineering", "Finance", "Legal", "Sales", "Service"],
-        name: "newRoleDepartment"
-    }]).then(response => {
-        const {newRoleName, newRoleSalary, newRoleDepartment} = response;
-        // MAYBE TURN THIS INTO A CLASS FOR ROLES!?!?!
-        // add in fetch for POST API
-
-        console.log(`The new role ${newRoleName} with the salary of $${newRoleSalary} within the department ${newRoleDepartment} has been added to the database.`);
-    })
-
+const addRole = async () => {
+    try {
+        const inq = await inquirer.prompt([{
+            type: "input",
+            message: "What is the name of the new role?",
+            name: "newRoleName"
+        }, {
+            type: "number",
+            message: "What is the salary of the new role?",
+            name: "newRoleSalary"
+        }, {
+            type: "list",
+            message: "Which department does the new role belong to?",
+            choices: ["Engineering", "Finance", "Legal", "Sales", "Service"],
+            name: "newRoleDepartment"
+        }])
+            const {newRoleName, newRoleSalary, newRoleDepartment} = await inq;
+            console.log(`The new role ${newRoleName} with the salary of $${newRoleSalary} within the department ${newRoleDepartment} has been added to the database.`);
+            
+            const result = await fetch(`${host}/api/roles`, {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json',
+                },
+                body: JSON.stringify({newRoleName, newRoleSalary, newRoleDepartment})
+            })
+            const json = await result.json()
+            console.log(json)
+            return json
+    } catch(err) {
+        console.log(err)
+    }
     // openingPrompt();
 }
 
