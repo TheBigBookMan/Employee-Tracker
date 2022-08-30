@@ -9,6 +9,8 @@ const db = mysql.createConnection({
     database: 'employee_tracker'
 })
 
+// NEED TO GET THE MANAGERS ID IN HERE AS WELL
+
 router.get('/', (req, res) => {
     const sql = `SELECT departments.name AS Department, roles.title AS Role
     FROM roles

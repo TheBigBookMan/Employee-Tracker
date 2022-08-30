@@ -69,7 +69,7 @@ const promptChecker = (selection, rolesArray, departmentArray) => {
     } else if(selection === "Add A Role") {
         addRole(departmentArray);
     } else if(selection === "Add An Employee") {
-        addEmployee();
+        addEmployee(rolesArray);
     } else if(selection === "Update An Employee Role") {
         updateEmployeeRole();
     }
@@ -145,8 +145,6 @@ const addDepartment = async () => {
             returnNewDepartment = json.data
             console.log(returnNewDepartment)
             
-            console.log(departmentChoiceArray)
-            
     } catch(err) {
         console.log(err)
     }
@@ -192,7 +190,7 @@ const addRole = async (departmentsArray) => {
 
 // WHEN I choose to add an employee
 // THEN I am prompted to enter the employee’s first name, last name, role, and manager, and that employee is added to the database
-const addEmployee = async () => {
+const addEmployee = async (rolesArray) => {
     const inq = await inquirer.prompt([{
         type: "input",
         message: "What is the new employees first name?",
@@ -204,7 +202,7 @@ const addEmployee = async () => {
     }, {
         type: "list",
         message: "What is the new employees role?",
-        choices: ["Sales Lead", "Sales Person", "Customer Service", "Lead Engineer", "Software Engineer", "Account Manager", "Accountant", "Legal Team Lead", "Lawyer"],
+        choices: rolesArray,
         name: "newEmployeeRole"
     }, {
         type: "list",
@@ -214,13 +212,18 @@ const addEmployee = async () => {
         name: "newEmployeeManager"
     }])
         const {newEmployeeFirstName, newEmployeeLastName, newEmployeeRole, newEmployeeManager} = await inq;
-        // THIS WILL PROBABLY NEED TO BE CREATED INTO A CLASS
-        // add in fetch for POST API
 
         console.log(`New Employee: ${newEmployeeFirstName} ${newEmployeeLastName} with the role of ${newEmployeeRole} and manager ${newEmployeeManager} has been added to the database.`)
     
-    
-
+        const result = await fetch(`${host}/api/employees`, {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json',
+            },
+            body: JSON.stringify({newEmployeeFirstName, newEmployeeLastName, newEmployeeRole, newEmployeeManager})
+        })
+        const json = await result.json()
+        console.log(json)
     openingPrompt();
 }
 
