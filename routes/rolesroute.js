@@ -26,20 +26,17 @@ router.get('/', (req, res) => {
 })
 
 router.post('/', (req, res) => {
-    const {newRoleName, newRoleSalary, newRoleDepartment} = req.body
+    const {newRoleName, newRoleSalary, newRoleDepartment, departmentsArray} = req.body
     let chosenNewRoleDepartment;
-    if(newRoleDepartment === "Engineering") {
-        chosenNewRoleDepartment = 1
-    } else if(newRoleDepartment === "Finance") {
-        chosenNewRoleDepartment = 2
-    } else if(newRoleDepartment === "Legal") {
-        chosenNewRoleDepartment = 3
-    } else if(newRoleDepartment === "Sales") {
-        chosenNewRoleDepartment = 4
-    } else if(newRoleDepartment === "Service") {
-        chosenNewRoleDepartment = 5
+    let counter = 1;
+    console.log(departmentsArray)
+    for(let i = 0; i < departmentsArray.length; i++) {
+        if(newRoleDepartment === departmentsArray[i]) {
+            counter = departmentsArray.indexOf(newRoleDepartment) + 1
+            chosenNewRoleDepartment = counter;
+        } 
     }
-
+    
     const newRoleChoices = [newRoleName, newRoleSalary, chosenNewRoleDepartment];
     const sql = `INSERT INTO roles (title, salary, department_id)
     VALUES (?, ?, ?)`

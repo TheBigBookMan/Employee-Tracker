@@ -3,19 +3,25 @@ const inquirer = require('inquirer');
 const host = "http://localhost:3001";
 const cTable = require('console.table');
 var departmentChoiceArray = [];
-const {departmentArray} = require('./api/queries');
-
-console.log("FIRST")
-console.log(departmentArray)
-
 
 // IMPORT THE ASCii-ART LOGO THING FOR THE INTRO -- CAN DO LAST
 
 
+
 // User is prompted with what they want to select
 const openingPrompt = async () => {
-    const chosenArray = await departmentArray;
-    console.log(chosenArray)
+    /// maybe make another fetch GET that gets all roles and departments and employees and put it called every start of opening prompt so it gets back up to date info from database
+    const updateArrays = await fetch(`${host}/api/queries`, 
+    {
+        method: 'GET',
+    });
+    const json = await updateArrays.json()
+    const rolesArray = checkRoleTitles(json.dataRol)
+    const departmentArray = checkDepartmentNames(json.dataDep)
+
+    // console.log(rolesArray)
+    // console.log(departmentArray)
+
     const inq = await inquirer.prompt([{
         type: "list",
         message: "What would you like to do?",
@@ -26,12 +32,32 @@ const openingPrompt = async () => {
             console.log("Thank you for using the Employee Tracker, goodbye.");
             return;
         } else {
-            promptChecker(inq.selectionPrompt);
+            promptChecker(inq.selectionPrompt, rolesArray, departmentArray);
         }
 };
 
+const checkRoleTitles = (array) => {
+    let newArray = []
+    for(let i = 0; i < array.length; i++) {
+        if(array[i]) {
+            newArray.push(array[i])
+        }
+    }
+    return newArray;
+}
+
+const checkDepartmentNames = (array) => {
+    let newArray = []
+    for(let i = 0; i < array.length; i++){
+        if(newArray.includes(array[i]) === false) {
+            newArray.push(array[i])
+        } 
+    }
+    return newArray;
+}
+
 // Function that chooses what selection was made in the prompt
-const promptChecker = selection => {
+const promptChecker = (selection, rolesArray, departmentArray) => {
     if(selection === "View All Departments") {
         viewAllDepartments();
     } else if(selection === "View All Roles") {
@@ -41,7 +67,7 @@ const promptChecker = selection => {
     } else if(selection === "Add A Department") {
         addDepartment();
     } else if(selection === "Add A Role") {
-        addRole();
+        addRole(departmentArray);
     } else if(selection === "Add An Employee") {
         addEmployee();
     } else if(selection === "Update An Employee Role") {
@@ -53,8 +79,7 @@ const promptChecker = selection => {
 //THEN I am presented with a formatted table showing department names and department ids
 const viewAllDepartments = async () => {
     // add in GET fetch
-    console.log("DEPARTMENT ARRAY")
-    console.log(departmentArray.depArray)
+    
     try {
         const result = await fetch(`${host}/api/departments`, {
         method: 'GET',
@@ -108,7 +133,7 @@ const addDepartment = async () => {
             name: "newDepartment"
         }])
             const newDepartment = await inq;
-            console.log(`The new department of ${newDepartment} has been added to the database.`)
+            console.log(`The new department of ${newDepartment.name} has been added to the database.`)
             const result = await fetch(`${host}/api/departments`, {
                 method: 'POST',
                 headers: {
@@ -131,7 +156,7 @@ const addDepartment = async () => {
 
 // WHEN I choose to add a role
 // THEN I am prompted to enter the name, salary, and department for the role and that role is added to the database
-const addRole = async () => {
+const addRole = async (departmentsArray) => {
     try {
         const inq = await inquirer.prompt([{
             type: "input",
@@ -144,7 +169,7 @@ const addRole = async () => {
         }, {
             type: "list",
             message: "Which department does the new role belong to?",
-            choices: departmentArray,
+            choices: departmentsArray,
             name: "newRoleDepartment"
         }])
             const {newRoleName, newRoleSalary, newRoleDepartment} = await inq;
@@ -155,10 +180,10 @@ const addRole = async () => {
                 headers: {
                     'Content-type': 'application/json',
                 },
-                body: JSON.stringify({newRoleName, newRoleSalary, newRoleDepartment})
+                body: JSON.stringify({newRoleName, newRoleSalary, newRoleDepartment, departmentsArray})
             })
             const json = await result.json()
-            console.table(json.data)
+            console.log(json.data)
     } catch(err) {
         console.log(err)
     }
@@ -212,7 +237,7 @@ const updateEmployeeRole = () => {
     }, {
         type: "list",
         message: "Which role do you want to assign to the updated employee?",
-        choices: ["Sales Lead", "Sales Person", "Customer Service", "Lead Engineer", "Software Engineer", "Account Manager", "Accountant", "Legal Team Lead", "Lawyer"],
+        choices: ["ADAD FROM DATABASE"],
         name: "updatedEmployeeRole"
     }]).then(response => {
         const {updateEmployeeName, updatedEmployeeRole} = response;
