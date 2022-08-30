@@ -8,7 +8,7 @@ const db = mysql.createConnection({
     password: 'Summerland!5',
     database: 'employee_tracker'
     }, 
-    console.log('Connected to the database.')
+    console.log('Roles route connected to the database.')
 );
 
 router.get('/', (req, res) => {

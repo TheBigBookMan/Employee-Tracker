@@ -18,6 +18,7 @@ const openingPrompt = async () => {
     const json = await updateArrays.json()
     const rolesArray = checkRoleTitles(json.dataRol)
     const departmentArray = checkDepartmentNames(json.dataDep)
+    const employeesArray = json.dataEmp
 
     const inq = await inquirer.prompt([{
         type: "list",
@@ -29,7 +30,7 @@ const openingPrompt = async () => {
             console.log("Thank you for using the Employee Tracker, goodbye.");
             return;
         } else {
-            promptChecker(inq.selectionPrompt, rolesArray, departmentArray);
+            promptChecker(inq.selectionPrompt, rolesArray, departmentArray, employeesArray);
         }
 };
 
@@ -54,7 +55,8 @@ const checkDepartmentNames = (array) => {
 }
 
 // Function that chooses what selection was made in the prompt
-const promptChecker = (selection, rolesArray, departmentArray) => {
+const promptChecker = (selection, rolesArray, departmentArray, employeesArray) => {
+    const removedDuplicates = removeDuplicates(rolesArray)
     if(selection === "View All Departments") {
         viewAllDepartments();
     } else if(selection === "View All Roles") {
@@ -66,11 +68,21 @@ const promptChecker = (selection, rolesArray, departmentArray) => {
     } else if(selection === "Add A Role") {
         addRole(departmentArray);
     } else if(selection === "Add An Employee") {
-        addEmployee(rolesArray);
+        addEmployee(removedDuplicates);
     } else if(selection === "Update An Employee Role") {
-        updateEmployeeRole();
+        updateEmployeeRole(employeesArray, removedDuplicates);
     }
 };
+
+const removeDuplicates = (array) => {
+    let newArray = []
+    for(let i = 0; i < array.length; i++){
+        if(newArray.includes(array[i]) === false) {
+            newArray.push(array[i])
+        } 
+    }
+    return newArray;
+}
 
 //WHEN I choose to view all departments
 //THEN I am presented with a formatted table showing department names and department ids
@@ -203,7 +215,6 @@ const addEmployee = async (rolesArray) => {
         }, {
             type: "list",
             message: "Who is the new employees manager?",
-            //NEED TO IMPORT THE CHOICES FROM DB
             choices: ["Isabella Stefan", "Cyrus Sigal", "Jessica Urbonas", "Gary Ryan"],
             name: "newEmployeeManager"
         }])
@@ -242,24 +253,32 @@ const checkNewEmployeeManager = (newEmployeeManager) => {
 // WHEN I choose to update an employee role
 // THEN I am prompted to select an employee to update and their new role and this information is updated in the database
 
-const updateEmployeeRole = () => {
-    console.log("update employee role")
-    inquirer.prompt([{
+const updateEmployeeRole = async (employeesArray, rolesArray) => {
+    const inq = await inquirer.prompt([{
         type: "list",
         message: "Which employee do you want to update?",
-        choices: ["NEED TO ADD FROM DATABASE I THINK"],
+        choices: employeesArray,
         name: "updateEmployeeName"
     }, {
         type: "list",
         message: "Which role do you want to assign to the updated employee?",
-        choices: ["ADAD FROM DATABASE"],
+        choices: rolesArray,
         name: "updatedEmployeeRole"
-    }]).then(response => {
-        const {updateEmployeeName, updatedEmployeeRole} = response;
+    }])
+        const {updateEmployeeName, updatedEmployeeRole} = await inq;
         console.log(`The employee ${updateEmployeeName} updated role to ${updatedEmployeeRole} has been updated in the database.`)
 
         // add in fetch for PUT API
-    })
+        const result = await fetch(`${host}/api/employees`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({updateEmployeeName, updatedEmployeeRole, rolesArray})
+        })
+        const json = await result.json()
+        console.log(json)
+
     openingPrompt();
 }
 

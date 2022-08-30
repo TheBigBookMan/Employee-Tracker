@@ -10,18 +10,23 @@ const db = mysql.createConnection({
 })
 
 router.get('/', (req, res) => {
-    const sql = `SELECT roles.id, departments.name AS Department, roles.title AS Role
-    FROM roles
-    RIGHT JOIN departments
-    ON roles.department_id = departments.id
-    ORDER BY roles.id ASC;`;
+    const sql = `SELECT CONCAT(employees.first_name, ' ', employees.last_name) AS Employee,
+    roles.id, departments.name AS Department, roles.title AS Role
+        FROM roles
+        LEFT JOIN employees
+        ON employees.role_id = roles.id
+        RIGHT JOIN departments
+        ON roles.department_id = departments.id
+        ORDER BY roles.id ASC;`;
     db.query(sql, (err, rows) => {
         const newDep = rows.map(row => row.Department)
         const newRol = rows.map(row => row.Role)
+        const newEmp = rows.map(row => row.Employee)
         res.json({
             message: 'success',
             dataDep: newDep,
-            dataRol: newRol
+            dataRol: newRol,
+            dataEmp: newEmp,
         })
     })
 })

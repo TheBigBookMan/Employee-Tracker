@@ -8,7 +8,7 @@ const db = mysql.createConnection({
     password: 'Summerland!5',
     database: 'employee_tracker'
     },
-    console.log('Connected to the database.')
+    console.log('Employee route connected to the database.')
 );
 
 router.get('/', (req, res) => {
@@ -56,7 +56,37 @@ router.post('/', (req, res) => {
             })
         }
     })
+})
 
+router.put('/', (req, res) => {
+    const {updateEmployeeName, updatedEmployeeRole, rolesArray} = req.body
+    
+    let updatedRoleId;
+    for(let i = 0; i < rolesArray.length; i++) {
+        if(updatedEmployeeRole === rolesArray[i]) {
+            updatedRoleId = rolesArray.indexOf(updatedEmployeeRole) + 1
+        }
+    }
+
+    const splitName = updateEmployeeName.split(' ')
+    const updatedEmployeeFirstName = splitName[0];
+    // const updatedEmployeeLastName = splitName[1];
+
+    const updatedEmployeeInfo = [updatedRoleId, updatedEmployeeFirstName]
+    const sql = `UPDATE employees
+    SET role_id = ?
+    WHERE first_name = ?;`
+
+    db.query(sql, updatedEmployeeInfo, (err, result) => {
+        if(err) {
+            res.status(400).json({error: err.message});
+        } else {
+            res.json({
+                message: 'success',
+                data: updatedEmployeeInfo
+            })
+        }
+    })
 })
 
 module.exports = router;
