@@ -20,6 +20,8 @@ app.get('/', (req, res) => {
     
 })
 
+
+
 // WRITE IN THE GET/POST/DELTE/PUT etc AND ADD IN THE SQL QUERIES AS WELL
 
 // Express listener to find PORT
