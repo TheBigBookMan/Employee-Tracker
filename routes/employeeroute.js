@@ -33,12 +33,30 @@ router.get('/', (req, res) => {
     })
 })
 
-// NEED TO GET THE VARIABLES PASSED THROUGH THE REQUEST AND TEMPLATE THEM INTO A SQL QUEWRY THAT IS AN INSERT INTO EMPLOYEES TABLE
-
 
 router.post('/', (req, res) => {
-    console.log(req.body)
-    res.send(req.body)
+    const {newEmployeeFirstName, newEmployeeLastName, newEmployeeRole, newEmployeeManagerId, rolesArray} = req.body;
+    let chosenRoleId;
+    for(let i = 0; i < rolesArray.length; i++) {
+        if(newEmployeeRole === rolesArray[i]) {
+            chosenRoleId = rolesArray.indexOf(newEmployeeRole) + 1
+        };
+    }
+    const newEmployeeChoices = [newEmployeeFirstName, newEmployeeLastName, chosenRoleId, newEmployeeManagerId];
+    const sql = `INSERT INTO employees (first_name, last_name, role_id, manager_id)
+    VALUES (?, ?, ?, ?)`
+
+    db.query(sql, newEmployeeChoices, (err, result) => {
+        if(err) {
+            res.status(400).json({error: err.message});
+        } else {
+            res.json({
+                message: 'success',
+                data: newEmployeeChoices
+            })
+        }
+    })
+
 })
 
 module.exports = router;

@@ -19,9 +19,6 @@ const openingPrompt = async () => {
     const rolesArray = checkRoleTitles(json.dataRol)
     const departmentArray = checkDepartmentNames(json.dataDep)
 
-    // console.log(rolesArray)
-    // console.log(departmentArray)
-
     const inq = await inquirer.prompt([{
         type: "list",
         message: "What would you like to do?",
@@ -143,7 +140,6 @@ const addDepartment = async () => {
             })
             const json = await result.json()
             returnNewDepartment = json.data
-            console.log(returnNewDepartment)
             
     } catch(err) {
         console.log(err)
@@ -181,7 +177,6 @@ const addRole = async (departmentsArray) => {
                 body: JSON.stringify({newRoleName, newRoleSalary, newRoleDepartment, departmentsArray})
             })
             const json = await result.json()
-            console.log(json.data)
     } catch(err) {
         console.log(err)
     }
@@ -191,42 +186,59 @@ const addRole = async (departmentsArray) => {
 // WHEN I choose to add an employee
 // THEN I am prompted to enter the employee’s first name, last name, role, and manager, and that employee is added to the database
 const addEmployee = async (rolesArray) => {
-    const inq = await inquirer.prompt([{
-        type: "input",
-        message: "What is the new employees first name?",
-        name: "newEmployeeFirstName"
-    }, {
-        type: "input",
-        message: "What is the new employees last name?",
-        name: "newEmployeeLastName"
-    }, {
-        type: "list",
-        message: "What is the new employees role?",
-        choices: rolesArray,
-        name: "newEmployeeRole"
-    }, {
-        type: "list",
-        message: "Who is the new employees manager?",
-        //NEED TO IMPORT THE CHOICES FROM DB
-        choices: ["IMPORT FROM DB"],
-        name: "newEmployeeManager"
-    }])
-        const {newEmployeeFirstName, newEmployeeLastName, newEmployeeRole, newEmployeeManager} = await inq;
-
-        console.log(`New Employee: ${newEmployeeFirstName} ${newEmployeeLastName} with the role of ${newEmployeeRole} and manager ${newEmployeeManager} has been added to the database.`)
+    try {
+        const inq = await inquirer.prompt([{
+            type: "input",
+            message: "What is the new employees first name?",
+            name: "newEmployeeFirstName"
+        }, {
+            type: "input",
+            message: "What is the new employees last name?",
+            name: "newEmployeeLastName"
+        }, {
+            type: "list",
+            message: "What is the new employees role?",
+            choices: rolesArray,
+            name: "newEmployeeRole"
+        }, {
+            type: "list",
+            message: "Who is the new employees manager?",
+            //NEED TO IMPORT THE CHOICES FROM DB
+            choices: ["Isabella Stefan", "Cyrus Sigal", "Jessica Urbonas", "Gary Ryan"],
+            name: "newEmployeeManager"
+        }])
+            const {newEmployeeFirstName, newEmployeeLastName, newEmployeeRole, newEmployeeManager} = await inq;
     
-        const result = await fetch(`${host}/api/employees`, {
-            method: 'POST',
-            headers: {
-                'Content-type': 'application/json',
-            },
-            body: JSON.stringify({newEmployeeFirstName, newEmployeeLastName, newEmployeeRole, newEmployeeManager})
-        })
-        const json = await result.json()
-        console.log(json)
+            console.log(`New Employee: ${newEmployeeFirstName} ${newEmployeeLastName} with the role of ${newEmployeeRole} and manager ${newEmployeeManager} has been added to the database.`)
+    
+            const newEmployeeManagerId = await checkNewEmployeeManager(newEmployeeManager)
+
+            const result = await fetch(`${host}/api/employees`, {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json',
+                },
+                body: JSON.stringify({newEmployeeFirstName, newEmployeeLastName, newEmployeeRole, newEmployeeManagerId, rolesArray})
+            })
+            const json = await result.json()
+            console.log(json)
+    } catch(err) {
+        console.log(err)
+    }
     openingPrompt();
 }
 
+const checkNewEmployeeManager = (newEmployeeManager) => {
+    if(newEmployeeManager === "Isabella Stefan") {
+        return 1;
+    } else if(newEmployeeManager === "Cyrus Sigal") {
+        return 4;
+    } else if(newEmployeeManager === "Jessica Urbonas") {
+        return 6;
+    } else if(newEmployeeManager === "Gary Ryan") {
+        return 8;
+    }
+}
 // WHEN I choose to update an employee role
 // THEN I am prompted to select an employee to update and their new role and this information is updated in the database
 

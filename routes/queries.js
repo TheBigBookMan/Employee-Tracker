@@ -9,13 +9,12 @@ const db = mysql.createConnection({
     database: 'employee_tracker'
 })
 
-// NEED TO GET THE MANAGERS ID IN HERE AS WELL
-
 router.get('/', (req, res) => {
-    const sql = `SELECT departments.name AS Department, roles.title AS Role
+    const sql = `SELECT roles.id, departments.name AS Department, roles.title AS Role
     FROM roles
     RIGHT JOIN departments
-    ON roles.department_id = departments.id`;
+    ON roles.department_id = departments.id
+    ORDER BY roles.id ASC;`;
     db.query(sql, (err, rows) => {
         const newDep = rows.map(row => row.Department)
         const newRol = rows.map(row => row.Role)
@@ -27,5 +26,5 @@ router.get('/', (req, res) => {
     })
 })
 
-// try to get this array to main place and get it updated everyime theres a new entry
+
 module.exports = router;
