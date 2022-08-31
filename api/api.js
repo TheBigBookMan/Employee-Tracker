@@ -1,4 +1,4 @@
-// Import packages
+// Import packages and modules
 const express = require('express');
 const app = express();
 const departmentRouter = require('../routes/departmentroute');
@@ -14,12 +14,12 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
 // Middleware to use the routers from different modules in separate paths
-app.use('/api/departments', departmentRouter)
-app.use('/api/employees', employeeRouter)
-app.use('/api/roles', rolesRouter)
-app.use('/api/queries', queriesRouter)
+app.use('/api/departments', departmentRouter);
+app.use('/api/employees', employeeRouter);
+app.use('/api/roles', rolesRouter);
+app.use('/api/queries', queriesRouter);
 
 // Express listener to find PORT
 app.listen(PORT, () => {
-    console.log(`Listening on PORT http://localhost:${PORT}/`)
-})
+    console.log(`Listening on PORT http://localhost:${PORT}/`);
+});
