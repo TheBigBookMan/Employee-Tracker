@@ -17,7 +17,7 @@ router.get('/', (req, res) => {
         ON employees.role_id = roles.id
         RIGHT JOIN departments
         ON roles.department_id = departments.id
-        ORDER BY roles.id ASC;`;
+        ORDER BY -roles.id DESC;`;
     db.query(sql, (err, rows) => {
         const newDep = rows.map(row => row.Department)
         const newRol = rows.map(row => row.Role)

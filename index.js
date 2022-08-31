@@ -4,6 +4,9 @@ const host = "http://localhost:3001";
 const cTable = require('console.table');
 var departmentChoiceArray = [];
 
+const logo = require('asciiart-logo');
+const config = require('./package.json');
+
 // IMPORT THE ASCii-ART LOGO THING FOR THE INTRO -- CAN DO LAST
 
 
@@ -20,6 +23,7 @@ const openingPrompt = async () => {
     const departmentArray = checkDepartmentNames(json.dataDep)
     const employeesArray = json.dataEmp
     console.log(departmentArray)
+    console.log(rolesArray)
 
     const inq = await inquirer.prompt([{
         type: "list",
@@ -52,6 +56,7 @@ const checkDepartmentNames = (array) => {
             newArray.push(array[i])
         } 
     }
+    console.log(newArray)
     return newArray;
 }
 
@@ -255,31 +260,34 @@ const checkNewEmployeeManager = (newEmployeeManager) => {
 // THEN I am prompted to select an employee to update and their new role and this information is updated in the database
 
 const updateEmployeeRole = async (employeesArray, rolesArray) => {
-    const inq = await inquirer.prompt([{
-        type: "list",
-        message: "Which employee do you want to update?",
-        choices: employeesArray,
-        name: "updateEmployeeName"
-    }, {
-        type: "list",
-        message: "Which role do you want to assign to the updated employee?",
-        choices: rolesArray,
-        name: "updatedEmployeeRole"
-    }])
-        const {updateEmployeeName, updatedEmployeeRole} = await inq;
-        console.log(`The employee ${updateEmployeeName} updated role to ${updatedEmployeeRole} has been updated in the database.`)
-
-        // add in fetch for PUT API
-        const result = await fetch(`${host}/api/employees`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({updateEmployeeName, updatedEmployeeRole, rolesArray})
-        })
-        const json = await result.json()
-        console.log(json)
-
+    try {
+        const inq = await inquirer.prompt([{
+            type: "list",
+            message: "Which employee do you want to update?",
+            choices: employeesArray,
+            name: "updateEmployeeName"
+        }, {
+            type: "list",
+            message: "Which role do you want to assign to the updated employee?",
+            choices: rolesArray,
+            name: "updatedEmployeeRole"
+        }])
+            const {updateEmployeeName, updatedEmployeeRole} = await inq;
+            console.log(`The employee ${updateEmployeeName} updated role to ${updatedEmployeeRole} has been updated in the database.`)
+    
+            // add in fetch for PUT API
+            const result = await fetch(`${host}/api/employees`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({updateEmployeeName, updatedEmployeeRole, rolesArray})
+            })
+            const json = await result.json()
+            console.log(json)
+    } catch(err) {
+        console.log(err)
+    }
     openingPrompt();
 }
 
@@ -288,6 +296,23 @@ const updateEmployeeRole = async (employeesArray, rolesArray) => {
 
 // init function that prompts the user with what to do
 const init = () => { 
+    console.log(
+        logo({
+            name: 'Employee Tracker',
+            font: 'Shadow',
+            lineChars: 10,
+            padding: 2,
+            margin: 3,
+            borderColor: 'grey',
+            logoColor: 'white',
+            textColor: 'green',
+        })
+        .emptyLine()
+        .right('Backend Tech Used: Node.js, Express.js, MySql')
+        .emptyLine()
+        .center("By Ben Smerd")
+        .render()
+    );
     openingPrompt();
 }
 
