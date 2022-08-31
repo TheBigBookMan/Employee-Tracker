@@ -22,6 +22,8 @@ router.get('/', (req, res) => {
         const newDep = rows.map(row => row.Department)
         const newRol = rows.map(row => row.Role)
         const newEmp = rows.map(row => row.Employee)
+        console.log(newDep)
+        console.log(newRol)
         res.json({
             message: 'success',
             dataDep: newDep,

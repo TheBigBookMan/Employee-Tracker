@@ -28,12 +28,11 @@ router.get('/', (req, res) => {
 router.post('/', (req, res) => {
     const {newRoleName, newRoleSalary, newRoleDepartment, departmentsArray} = req.body
     let chosenNewRoleDepartment;
-    let counter = 1;
+
     console.log(departmentsArray)
     for(let i = 0; i < departmentsArray.length; i++) {
         if(newRoleDepartment === departmentsArray[i]) {
-            counter = departmentsArray.indexOf(newRoleDepartment) + 1
-            chosenNewRoleDepartment = counter;
+            chosenNewRoleDepartment = departmentsArray.indexOf(newRoleDepartment) + 1;
         } 
     }
     

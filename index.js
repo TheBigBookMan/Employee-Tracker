@@ -19,6 +19,7 @@ const openingPrompt = async () => {
     const rolesArray = checkRoleTitles(json.dataRol)
     const departmentArray = checkDepartmentNames(json.dataDep)
     const employeesArray = json.dataEmp
+    console.log(departmentArray)
 
     const inq = await inquirer.prompt([{
         type: "list",
